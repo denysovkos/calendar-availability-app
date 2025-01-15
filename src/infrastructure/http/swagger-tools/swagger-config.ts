@@ -5,7 +5,7 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
     openapi: {
         openapi: '3.0.0',
         info: {
-            title: 'Atlas Metric API Documentation',
+            title: 'API Documentation',
             description: 'API documentation',
             version: '1.0.0'
         },
@@ -16,7 +16,8 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
             }
         ],
         tags: [
-            {name: 'health', description: 'Health check related endpoints'}
+            {name: 'health', description: 'Health check related endpoints'},
+            {name: 'calendar', description: 'Calendar related endpoints'}
         ],
         components: {
             securitySchemes: {
@@ -28,7 +29,7 @@ export const swaggerOptions: FastifyDynamicSwaggerOptions = {
             }
         }
     }
-}
+};
 
 export const swaggerUiOptions: FastifySwaggerUiOptions = {
     routePrefix: '/api/docs',
@@ -37,12 +38,12 @@ export const swaggerUiOptions: FastifySwaggerUiOptions = {
         deepLinking: false
     },
     uiHooks: {
-        onRequest: function (request, reply, next) { next() },
-        preHandler: function (request, reply, next) { next() }
+        onRequest: function (request, reply, next) { next(); },
+        preHandler: function (request, reply, next) { next(); }
     },
     staticCSP: false,
     transformStaticCSP: (header) => header,
-    transformSpecification: (swaggerObject) => { return swaggerObject },
+    transformSpecification: (swaggerObject) => { return swaggerObject; },
     transformSpecificationClone: true,
     logo: {
         type: 'image/png',

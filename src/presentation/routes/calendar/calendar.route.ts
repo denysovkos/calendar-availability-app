@@ -14,7 +14,10 @@ export const calendarRoutes = (server: FastifyInstance): void => {
         app.post<{
             Body: ICalendarQueryRequest
         }>("/query", {
-            schema: getCalendarAvailabilitySchema
+            schema: {
+                tags: ['calendar'],
+                ...getCalendarAvailabilitySchema
+            }
         }, async (request) => {
             return getCalendarAvailability(request.body);
         });

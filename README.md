@@ -1,7 +1,23 @@
-# Service template
+# Appointment Booking System
+
+This project implements an appointment booking system that allows customers to schedule appointments with sales managers to discuss products like solar panels and heat pumps.
 
 ## Overview
-This project is built using TypeScript and JavaScript, and it leverages AWS CDK for infrastructure as code. The project includes various stacks for deploying services, databases, and other resources.
+
+The system provides an API endpoint that returns available appointment slots based on customer criteria:
+- Language preference (German/English)
+- Products of interest (SolarPanels/Heatpumps)
+- Customer rating (Gold/Silver/Bronze)
+
+### Key Features
+
+- Finds available one-hour appointment slots
+- Handles overlapping time slots (e.g., 10:30-11:30, 11:00-12:00, 11:30-12:30)
+- Prevents double-booking of sales managers for overlapping slots
+- Matches customers to sales managers based on language, products, and rating criteria
+- Supports booking appointments for multiple products in one session
+
+## Technical Implementation
 
 ## Prerequisites
 1. **Node.js** <img src="https://nodejs.org/static/images/logo.svg" alt="Node.js" width="35"/>
@@ -10,100 +26,167 @@ This project is built using TypeScript and JavaScript, and it leverages AWS CDK 
 4. **Docker** <img src="https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png" alt="Docker" width="20"/>
 
 
-## Usage
+##  The project is built using:
+- TypeScript
+- TypeORM for database interactions
+- PostgreSQL for data storage
+- Jest for testing
 
-A template repository allows you to create a new repository with the same structure, files, and settings as the template. Follow these steps to get started:
+### Project Structure
 
-## Steps to Create a New Repository from a Template
-
-1. **Go to the Template Repository**  
-   Navigate to the template repository on GitHub. For example: [Template Repository](https://github.com/owner/template-repo).
-
-2. **Click the "Use this template" Button**  
-   In the top-right corner of the repository page, click the green **"Use this template"** button.
-
-3. **Set Up Your New Repository**
-    - In the pop-up window, enter the name of your new repository.
-    - (Optional) Add a description for your repository.
-    - Choose whether the repository should be public or private.
-
-4. **Click "Create Repository from Template"**  
-   This will create a new repository in your account with the contents of the template.
-
-
-## Configuration
-### How to configure service in `infrastructure/bin/config.ts`
-1. Set the deployment stage:
-```typescript
-const stage = process.env.STAGE;
+```
+src/
+├── entities/
+│   ├── salesManager.entity.ts
+│   └── slot.entity.ts
+├── infrastructure/
+│   └── repositories/
+│       ├── salesManager.repository.ts
+│       └── slots.repository.ts
+├── services/
+│   └── managerAvailability.service.ts
+└── tests/
+    ├── main.test.ts
+    ├── repositories/
+    │   ├── salesManager.repository.test.ts
+    │   └── slots.repository.test.ts
+    └── services/
+        └── managerAvailability.service.test.ts
 ```
 
-2. Service name will be loaded from .git folder, hence you don't need to set it manually.
+## API Documentation
 
-3. Configure the stack:
-```typescript
-export const config: StackConfig = {
-    graphql: false, // Set to true when you need to enable GraphQL
-    env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
-        stage,
-        isFeature: isFeatureEnvironment(stage),
-    },
-    serviceName: SERVICE_NAME,
-    databases: {
-        postgres: false, // Make true when you need to enable Postgres
-        dynamo: false // Make true when you need to enable DynamoDB
-    },
-    domain: '',  // Optional (used as {domain}.{hostedZoneName}, e.g. domain.atlas-metrics.com)
-    vpc: undefined
-};
+The API is documented using OpenAPI 3.0 specification and includes Swagger UI for interactive testing.
+
+### Swagger UI Access
+
+Access the Swagger UI documentation at:
+```
+http://127.0.0.1:3000/api/docs
 ```
 
-## Deployment
+### OpenAPI Specification
 
-Run the command:
+The OpenAPI specification is available at:
+```
+http://127.0.0.1:3000/api/docs/json
+```
+
+### API Endpoint
+
+- **URL**: `http://localhost:3000/calendar/query`
+- **Method**: POST
+- **Request Body**:
+```json
+{
+    "date": "2024-05-03",
+    "products": ["SolarPanels", "Heatpumps"],
+    "language": "German",
+    "rating": "Gold"
+}
+```
+- **Response**:
+```json
+[
+    {
+        "start_date": "2024-05-03T10:30:00.000Z",
+        "available_count": 1
+    },
+    {
+        "start_date": "2024-05-03T11:00:00.000Z",
+        "available_count": 1
+    }
+]
+```
+
+### Implementation Approaches
+
+The service provides two implementation methods:
+
+1. **DB-Only Implementation** (`getAvailabilityFromDB`):
+    - Uses a single complex SQL query
+    - More efficient for large datasets
+    - Handles all logic at the database level
+
+2. **Runtime Implementation** (`getAvailabilityInRuntime`):
+    - Processes data in TypeScript
+    - More flexible for business logic changes
+    - Easier to debug and modify
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- Docker
+- PostgreSQL (if not using Docker)
+
+### Setup
+
+1. Clone the repository:
 ```bash
-AWS_PROFILE=<profile> AWS_ACCOUNT=<account> AWS_REGION=eu-central-1 STAGE=<stage> GITHUB_PACKAGE_TOKEN=<token> cdk deploy --all --require-approval never --method=direct
+git clone <repository-url>
 ```
 
-## Stacks Description
-### ECR Stack
-The `EcrStack` creates an ECR repository with image scanning and lifecycle rules.
-
-### RDS Stack
-The `RdsStack` creates an RDS database if enabled in the configuration.
-After the database is created, the stack will create a password in Secrets Manager.
-Credentials will be automatically passed into docker containers:
-```
-process.env.DB_HOST
-process.env.DB_PORT
-process.env.DB_DATABASE
-process.env.DB_USER
-process.env.DB_PASSWORD
+2. Install dependencies:
+```bash
+yarn install
 ```
 
-### DynamoDB Stack
-The `DynamoStack` creates a DynamoDB table if enabled in the configuration.
-Credentials will be automatically passed into docker containers:
+3. Start the database using Docker:
+```bash
+cd database
+docker build -t enpal-coding-challenge-db .
+docker run --name enpal-coding-challenge-db -p 5432:5432 -d enpal-coding-challenge-db
 ```
-process.env.DYNAMODB_TABLE
+
+4. Run the tests:
+```bash
+yarn test
 ```
 
-### Domain Stack
-The `DomainStack` sets up a domain if configured.
+### Database Connection
 
-### GraphQL Stack
-The `GraphqlStack` sets up a GraphQL API if enabled.
+Default connection string:
+```
+postgres://postgres:mypassword123!@localhost:5432/coding-challenge
+```
 
-### VPC Stack
-The `VpcStack` creates a VPC for the application.
+## Testing
 
-### Docker Image Deployment Stack
-The `DockerImageDeploymentStack` builds and pushes a Docker image to the ECR repository.
+The project includes comprehensive test coverage:
 
-### ECS Container Stack
-The `EcsContainerStack` sets up an ECS Fargate service with load balancing, environment variables, and scaling policies.
+- Main integration tests in `main.test.ts`
+- Repository tests:
+    - `salesManager.repository.test.ts`
+    - `slots.repository.test.ts`
+- Service tests:
+    - `managerAvailability.service.test.ts`
+
+Run tests with:
+```bash
+yarn test
+```
+
+## Database Schema
+
+### sales_managers
+| Column           | Type              | Description                               |
+|------------------|-------------------|-------------------------------------------|
+| id (PK)         | serial            | ID of the sales manager                   |
+| name            | varchar(250)      | Full name of sales manager                |
+| languages       | varchar(100)[]    | List of languages spoken                  |
+| products        | varchar(100)[]    | List of products they can discuss         |
+| customer_ratings| varchar(100)[]    | List of customer ratings they can handle  |
+
+### slots
+| Column            | Type       | Description                               |
+|-------------------|------------|-------------------------------------------|
+| id (PK)          | serial     | ID of the slot                           |
+| start_date       | timestampz | Start date and time of the slot          |
+| end_date         | timestampz | End date and time of the slot            |
+| booked           | bool       | Whether the slot is booked               |
+| sales_manager_id | integer    | ID of the sales manager (Foreign Key)    |
 
 ## Clean Architecture
 Clean Architecture is a software design philosophy that separates the elements of a design into ring levels. This approach emphasizes the separation of concerns, making the system easier to maintain and test.
@@ -126,7 +209,9 @@ src/
 │   └── database/            # DB connectors or ORMs
 ```
 
-### Healthcheck route
-By default, AWS use `/` as a healthcheck route. For both (http and gql) servers it is already implemented, so it mandatory to execute `Server`
-class method: `.setHealthcheck()`
+## Notes
+
+- The system only returns available slots and does not handle the actual booking process
+- All times are handled in UTC
+- The database schema includes indexes for optimized query performance
 
