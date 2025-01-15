@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.db
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_DB: coding-challenge
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword123!
+    ports:
+      - "5432:5432"
+    networks:
+      - calendar-app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.app
+    container_name: app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=coding-challenge
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=mypassword123!
+      - NODE_ENV=production
+    networks:
+      - calendar-app-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  calendar-app-network:
+    name: calendar-app-network

@@ -1752,6 +1752,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"calendar-app@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "calendar-app@workspace:."
+  dependencies:
+    "@eslint/js": "npm:^9.18.0"
+    "@fastify/cors": "npm:^10.0.2"
+    "@fastify/swagger": "npm:^9.4.0"
+    "@fastify/swagger-ui": "npm:^5.2.0"
+    "@types/jest": "npm:^29.5.14"
+    "@types/node-fetch": "npm:^2.6.12"
+    "@types/pg": "npm:^8"
+    class-validator: "npm:^0.14.1"
+    dotenv: "npm:^16.4.7"
+    eslint: "npm:^9.18.0"
+    eslint-config-prettier: "npm:^10.0.1"
+    fastify: "npm:^5.2.1"
+    jest: "npm:^29.7.0"
+    node-fetch: "npm:^2.7.0"
+    pg: "npm:^8.13.1"
+    reflect-metadata: "npm:^0.2.2"
+    ts-jest: "npm:^29.2.5"
+    ts-node: "npm:^10.9.2"
+    typeorm: "npm:^0.3.20"
+    typescript: "npm:^5.7.3"
+    typescript-eslint: "npm:^8.20.0"
+  languageName: unknown
+  linkType: soft
+
 "callsites@npm:^3.0.0":
   version: 3.1.0
   resolution: "callsites@npm:3.1.0"
@@ -4810,34 +4838,6 @@ __metadata:
   checksum: 10c0/88f33e148b210c153873cb08cfe1e281d518aaa9a666d4d148add6560db5cd3c582f3a08ccb91f38d5f379ead256da9931234ed122057f40bb5766e65e58adaf
   languageName: node
   linkType: hard
-
-"service-template@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "service-template@workspace:."
-  dependencies:
-    "@eslint/js": "npm:^9.18.0"
-    "@fastify/cors": "npm:^10.0.2"
-    "@fastify/swagger": "npm:^9.4.0"
-    "@fastify/swagger-ui": "npm:^5.2.0"
-    "@types/jest": "npm:^29.5.14"
-    "@types/node-fetch": "npm:^2.6.12"
-    "@types/pg": "npm:^8"
-    class-validator: "npm:^0.14.1"
-    dotenv: "npm:^16.4.7"
-    eslint: "npm:^9.18.0"
-    eslint-config-prettier: "npm:^10.0.1"
-    fastify: "npm:^5.2.1"
-    jest: "npm:^29.7.0"
-    node-fetch: "npm:^2.7.0"
-    pg: "npm:^8.13.1"
-    reflect-metadata: "npm:^0.2.2"
-    ts-jest: "npm:^29.2.5"
-    ts-node: "npm:^10.9.2"
-    typeorm: "npm:^0.3.20"
-    typescript: "npm:^5.7.3"
-    typescript-eslint: "npm:^8.20.0"
-  languageName: unknown
-  linkType: soft
 
 "set-cookie-parser@npm:^2.6.0":
   version: 2.7.1

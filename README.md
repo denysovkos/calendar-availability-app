@@ -17,6 +17,53 @@ The system provides an API endpoint that returns available appointment slots bas
 - Matches customers to sales managers based on language, products, and rating criteria
 - Supports booking appointments for multiple products in one session
 
+## Docker Deployment
+
+You can run the application using Docker Compose, which will set up both the database and application containers.
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Running with Docker Compose
+
+1. Build and start both services:
+```bash
+docker compose up --build
+```
+
+2. Start in detached mode:
+```bash
+docker compose up -d
+```
+
+3. View logs:
+```bash
+# All services
+docker compose logs -f
+
+# Specific service
+docker compose logs -f app
+docker compose logs -f db
+```
+
+4. Stop services:
+```bash
+docker compose down
+```
+
+### Available Services
+
+After starting, the following services will be available:
+
+- **API Application**: `http://localhost:3000`
+    - API Documentation: `http://127.0.0.1:3000/api/docs`
+    - OpenAPI Spec: `http://127.0.0.1:3000/api/docs/json`
+
+- **Database**: `localhost:5432`
+    - Database Name: `coding-challenge`
+
 ## Technical Implementation
 
 ## Prerequisites
