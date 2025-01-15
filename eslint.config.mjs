@@ -14,5 +14,6 @@ export default tseslint.config({
         '@typescript-eslint/ban-ts-comment': 'warn',
         '@/object-curly-spacing': ['error', 'never'],
         '@typescript-eslint/explicit-function-return-type': 'warn',
+        '@/semi': ['error', 'always'],
     }
 });

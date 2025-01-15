@@ -1,19 +1,20 @@
-import Fastify, {FastifyInstance} from 'fastify'
+import Fastify, {FastifyInstance} from 'fastify';
 import cors from "@fastify/cors";
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import {swaggerOptions, swaggerUiOptions} from './swagger-tools/swagger-config';
 import {healthCheckSchema} from "../../presentation/openapi/schemas";
+import {setRoutes} from "../../presentation/routes";
 
 export class HttpServer {
-    private readonly server: FastifyInstance
-    private readonly port = +(process.env.PORT || 8080);
+    private readonly server: FastifyInstance;
+    private readonly port = +(process.env.PORT || 3000);
     private swaggerEnabled = false;
 
     constructor() {
         this.server = Fastify({
             logger: true
-        })
+        });
     }
 
     setCors(): HttpServer {
@@ -34,6 +35,12 @@ export class HttpServer {
             };
         });
 
+        return this;
+    }
+
+    setRoutes(): HttpServer {
+        setRoutes(this.server);
+        
         return this;
     }
 
@@ -61,5 +68,9 @@ export class HttpServer {
                 console.log(`Swagger documentation available at ${address}/api/docs`);
             }
         });
+    }
+
+    async stop(): Promise<void> {
+        await this.server.close();
     }
 }
